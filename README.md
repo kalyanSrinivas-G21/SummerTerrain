@@ -1,142 +1,35 @@
-# SummerTerrain
+# Summer Terrain
+[![Java](https://img.shields.io/badge/Java-17-orange.svg)](https://www.oracle.com/java/)
+[![OpenJDK](https://img.shields.io/badge/OpenJDK-Temurin%2017-red.svg)](https://adoptium.net/)
+[![LibGDX](https://img.shields.io/badge/LibGDX-1.11-blue.svg)](https://libgdx.com/)
+[![Gradle](https://img.shields.io/badge/Gradle-8.x-green.svg)](https://gradle.org/)
 
-A [libGDX](https://libgdx.com/) project generated with [gdx-liftoff](https://github.com/libgdx/gdx-liftoff).
+A **Java-based 2D game project** built using the [LibGDX](https://libgdx.com/) framework and powered by [Eclipse Temurin OpenJDK](https://adoptium.net/).
 
-This project was generated with a template including simple application launchers and an `ApplicationAdapter` extension that draws libGDX logo.
+# About
 
-## File Structure
+Summer Terrain is 2D Pixel Art exploration game built using pure java. The core game engine was built using libGDX framework.
 
-```SummerTerrain/
-│
-├── assets/                          # 🔥 SHARED GAME ASSETS (used by BOTH)
-│   ├── maps/
-│   │   ├── Main_map.tmx
-│   │   ├── interiors.tmx
-│   │   └── campus.tsx
-│   │
-│   ├── tilesets/
-│   │   ├── campus_tiles.png
-│   │   ├── buildings.png
-│   │   └── nature.png
-│   │
-│   ├── characters/
-│   │   ├── player/
-│   │   │   ├── idle.png
-│   │   │   ├── walk_up.png
-│   │   │   ├── walk_down.png
-│   │   │   ├── walk_left.png
-│   │   │   └── walk_right.png
-│   │   │
-│   │   └── npc/
-│   │       ├── student.png
-│   │       └── professor.png
-│   │
-│   ├── objects/
-│   │   ├── benches.png
-│   │   ├── doors.png
-│   │   └── lamps.png
-│   │
-│   ├── ui/
-│   │   ├── buttons/
-│   │   ├── icons/
-│   │   └── fonts/
-│   │       ├── pixel.fnt
-│   │       └── pixel.png
-│   │
-│   ├── audio/
-│   │   ├── music/
-│   │   │   ├── campus_theme.mp3
-│   │   │   └── night_theme.mp3
-│   │   └── sfx/
-│   │       ├── step.wav
-│   │       ├── interact.wav
-│   │       └── door.wav
-│   │
-│   └── shaders/                     # (Optional – later)
-│       └── lighting.frag
-│
-├── core/                            # 🔥 MAIN GAME LOGIC (PLATFORM-INDEPENDENT)
-│   └── src/
-│       └── in/
-│           └── hauntedcampus/
-│               │
-│               ├── HauntedCampusGame.java   # Main Game class
-│               │
-│               ├── screens/
-│               │   ├── SplashScreen.java
-│               │   ├── MenuScreen.java
-│               │   ├── GameScreen.java
-│               │   ├── PauseScreen.java
-│               │   └── GameOverScreen.java
-│               │
-│               ├── world/
-│               │   ├── GameMap.java          # Abstract map
-│               │   ├── TiledGameMap.java     # TMX implementation
-│               │   └── MapManager.java
-│               │
-│               ├── entities/
-│               │   ├── Entity.java           # Base entity
-│               │   ├── Player.java
-│               │   ├── NPC.java
-│               │   └── Enemy.java
-│               │
-│               ├── input/
-│               │   ├── GameInputProcessor.java
-│               │   ├── KeyboardInput.java
-│               │   └── InputMapper.java
-│               │
-│               ├── collision/
-│               │   ├── CollisionHandler.java
-│               │   ├── CollisionLayer.java
-│               │   └── RectangleCollider.java
-│               │
-│               ├── camera/
-│               │   └── GameCamera.java
-│               │
-│               ├── ui/
-│               │   ├── Hud.java
-│               │   ├── DialogueBox.java
-│               │   └── InventoryUI.java
-│               │
-│               ├── audio/
-│               │   ├── AudioManager.java
-│               │   └── MusicManager.java
-│               │
-│               ├── utils/
-│               │   ├── Constants.java
-│               │   ├── AssetLoader.java
-│               │   ├── SaveManager.java
-│               │   └── DebugUtils.java
-│               │
-│               └── enums/
-│                   ├── Direction.java
-│                   ├── GameState.java
-│                   └── EntityType.java
-│
-├── desktop/                         # 🖥️ DESKTOP LAUNCHER
-│   └── src/
-│       └── in/
-│           └── hauntedcampus/
-│               └── DesktopLauncher.java
-│
-├── html/                            # 🌐 HTML (GWT) VERSION
-│   ├── src/
-│   │   └── in/
-│   │       └── hauntedcampus/
-│   │           └── HtmlLauncher.java
-│   │
-│   ├── webapp/
-│   │   ├── index.html
-│   │   ├── styles.css
-│   │   └── favicon.png
-│   │
-│   └── assets/                      # (Auto-linked to main assets)
-│
-├── gradle/
-├── build.gradle
-├── settings.gradle
-└── gradlew
-```
+It uses [Box2D](https://box2d.org/) as a physic system for collision handling and movement.
+It also uses [Ashley](https://github.com/libgdx/ashley) entity component system.And for keyboard controllers it uses [Controllers](https://github.com/libgdx/gdx-controllers).
+
+This project is designed for learning:
+
+- Game loop structure
+- Understand LibGDX frameworks
+- Core Java
+- Gradle-based multi-platform setup
+
+
+## Game 
+
+Game is still in early prototype stage. Making little progress...
+
+The controls are:
+- Arrows/WASD keys to move around
+- Space to attack which is also used to interact with chests
+- I to open/close inventory
+- Esc to pause/resume
 
 ## Platforms
 
@@ -144,27 +37,93 @@ This project was generated with a template including simple application launcher
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 - `html`: Web platform using GWT and WebGL. Supports only Java projects.
 
-## Gradle
+## Setup Guide
 
-This project uses [Gradle](https://gradle.org/) to manage dependencies.
-The Gradle wrapper was included, so you can run Gradle tasks using `gradlew.bat` or `./gradlew` commands.
-Useful Gradle tasks and flags:
+Follow these steps to run the project on your system.
 
-- `--continue`: when using this flag, errors will not stop the tasks from running.
-- `--daemon`: thanks to this flag, Gradle daemon will be used to run chosen tasks.
-- `--offline`: when using this flag, cached dependency archives will be used.
-- `--refresh-dependencies`: this flag forces validation of all dependencies. Useful for snapshot versions.
-- `build`: builds sources and archives of every project.
-- `cleanEclipse`: removes Eclipse project data.
-- `cleanIdea`: removes IntelliJ project data.
-- `clean`: removes `build` folders, which store compiled classes and built archives.
-- `eclipse`: generates Eclipse project data.
-- `html:dist`: compiles GWT sources. The compiled application can be found at `html/build/dist`: you can use any HTTP server to deploy it.
-- `html:superDev`: compiles GWT sources and runs the application in SuperDev mode. It will be available at [localhost:8080/html](http://localhost:8080/html). Use only during development.
-- `idea`: generates IntelliJ project data.
-- `lwjgl3:jar`: builds application's runnable jar, which can be found at `lwjgl3/build/libs`.
-- `lwjgl3:run`: starts the application.
-- `test`: runs unit tests (if any).
+---
 
-Note that most tasks that are not specific to a single project can be run with `name:` prefix, where the `name` should be replaced with the ID of a specific project.
-For example, `core:clean` removes `build` folder only from the `core` project.
+### Install OpenJDK (Eclipse Temurin)
+
+Download and install **JDK 17** from Eclipse Temurin.
+
+After installation, verify using:
+
+```bash
+java -version
+```
+
+Expected output should contain:
+
+```
+openjdk version "17.x.x"
+```
+
+---
+
+### Clone the Repository
+
+```bash
+git clone <your-repository-url>
+cd SummerTerrain
+```
+
+---
+
+### Open in IDE
+IDE : IntelliJ IDEA (Recommended)
+
+1. Open IntelliJ IDEA
+2. Click **Open**
+3. Select the project folder
+4. Allow Gradle to sync
+
+### Build the Project
+
+On macOS/Linux:
+
+```bash
+./gradlew build
+```
+
+On Windows:
+
+```bash
+gradlew build
+```
+
+---
+
+### Run Desktop Version
+
+On macOS/Linux:
+
+```bash
+./gradlew desktop:run
+```
+
+On Windows:
+
+```bash
+gradlew desktop:run
+```
+
+---
+## Project Structure
+
+```
+SummerTerrain/
+│
+├── assets/           # Maps, tilesets, textures
+├── core/             # Game logic
+├── lwjgl/            # Desktop launcher
+├── html/             # HTML web Launcher
+├── build.gradle
+└── settings.gradle
+```
+---
+
+## Credits
+For building these game I have used few Online Resources.
+
+- Map : 
