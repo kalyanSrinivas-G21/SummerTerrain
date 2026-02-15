@@ -6,7 +6,7 @@
 
 A **Java-based 2D game project** built using the [LibGDX](https://libgdx.com/) framework and powered by [Eclipse Temurin OpenJDK](https://adoptium.net/).
 
-![Game-image.png](img.png)
+![Game Image](assets/objects/Title-image.png)
 ---
 # About
 
