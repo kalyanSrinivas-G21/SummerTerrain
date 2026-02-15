@@ -6,6 +6,7 @@
 
 A **Java-based 2D game project** built using the [LibGDX](https://libgdx.com/) framework and powered by [Eclipse Temurin OpenJDK](https://adoptium.net/).
 
+---
 # About
 
 Summer Terrain is 2D Pixel Art exploration game built using pure java. The core game engine was built using libGDX framework.
@@ -20,7 +21,7 @@ This project is designed for learning:
 - Core Java
 - Gradle-based multi-platform setup
 
-
+---
 ## Game 
 
 Game is still in early prototype stage. Making little progress...
@@ -30,22 +31,21 @@ The controls are:
 - Space to attack which is also used to interact with chests
 - I to open/close inventory
 - Esc to pause/resume
-
+---
 ## Platforms
 
 - `core`: Main module with the application logic shared by all platforms.
 - `lwjgl3`: Primary desktop platform using LWJGL3; was called 'desktop' in older docs.
 - `html`: Web platform using GWT and WebGL. Supports only Java projects.
 
+---
 ## Setup Guide
 
 Follow these steps to run the project on your system.
 
----
+### 1. Install OpenJDK (Eclipse Temurin)
 
-### Install OpenJDK (Eclipse Temurin)
-
-Download and install **JDK 17** from Eclipse Temurin.
+Download and install **JDK 17** from [Eclipse Temurin](https://adoptium.net/temurin).
 
 After installation, verify using:
 
@@ -59,18 +59,14 @@ Expected output should contain:
 openjdk version "17.x.x"
 ```
 
----
-
-### Clone the Repository
+### 2. Clone the Repository
 
 ```bash
 git clone <your-repository-url>
 cd SummerTerrain
 ```
 
----
-
-### Open in IDE
+### 3. Open in IDE
 IDE : IntelliJ IDEA (Recommended)
 
 1. Open IntelliJ IDEA
@@ -78,7 +74,7 @@ IDE : IntelliJ IDEA (Recommended)
 3. Select the project folder
 4. Allow Gradle to sync
 
-### Build the Project
+### 4. Build the Project
 
 On macOS/Linux:
 
@@ -92,9 +88,7 @@ On Windows:
 gradlew build
 ```
 
----
-
-### Run Desktop Version
+### 5. Run Desktop Version
 
 On macOS/Linux:
 
@@ -126,4 +120,5 @@ SummerTerrain/
 ## Credits
 For building these game I have used few Online Resources.
 
-- Map : 
+- Map : [SummerPlains TileSet](https://schwarnhild.itch.io/summer-plains-tileset-and-asset-pack-32x32-pixels)
+- UI  : [UI Pack](https://crusenho.itch.io/complete-ui-essential-pack)
