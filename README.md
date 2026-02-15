@@ -6,6 +6,7 @@
 
 A **Java-based 2D game project** built using the [LibGDX](https://libgdx.com/) framework and powered by [Eclipse Temurin OpenJDK](https://adoptium.net/).
 
+![Game-image.png](img.png)
 ---
 # About
 
@@ -62,7 +63,7 @@ openjdk version "17.x.x"
 ### 2. Clone the Repository
 
 ```bash
-git clone <your-repository-url>
+git clone https://github.com/kalyanSrinivas-G21/SummerTerrain.git
 cd SummerTerrain
 ```
 
