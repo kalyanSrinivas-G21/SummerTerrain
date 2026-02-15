@@ -102,6 +102,27 @@ On Windows:
 gradlew desktop:run
 ```
 
+### 6. Run HTML (Web) Version
+To compile HTML version:
+
+```bash
+./gradlew html:build
+```
+
+To start local development server:
+
+```bash
+./gradlew html:superDev
+```
+
+After running `superDev`, open:
+
+```
+http://localhost:8080
+```
+
+in your browser.
+
 ---
 ## Project Structure
 
