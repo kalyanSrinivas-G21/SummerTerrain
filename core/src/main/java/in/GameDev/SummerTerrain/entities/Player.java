@@ -5,13 +5,27 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import in.GameDev.SummerTerrain.collision.CollisionHandler;
 
 public class Player {
-    private Texture spriteSheet;
-    private TextureRegion currentFrame;
+    public enum State { IDLE, WALK, ATTACK, PICK_UP }
+    public enum Direction { DOWN, UP, LEFT, RIGHT }
+
+    private State currentState = State.IDLE;
+    private Direction currentDirection = Direction.DOWN;
+    private float stateTimer = 0f;
+
+    private Animation<TextureRegion> downIdle, upIdle, rightIdle, leftIdle;
+    private Animation<TextureRegion> downWalk, upWalk, rightWalk, leftWalk;
+    private Animation<TextureRegion> downAttack, upAttack, rightAttack, leftAttack;
+    private Animation<TextureRegion> pickUp;
+
+    private Array<Texture> textureList = new Array<>();
+
     private Vector2 position;
 
     // Size of the player (in world units / pixels)
@@ -37,19 +51,29 @@ public class Player {
         System.out.println("=== PLAYER CONSTRUCTOR START ===");
 
         try {
-            // Load player sprite sheet
-            spriteSheet = new Texture("characters/player/idle.png");
-            System.out.println("✓ Texture loaded successfully!");
-            System.out.println("  Sprite sheet size: " + spriteSheet.getWidth() + "x" + spriteSheet.getHeight());
+            downIdle = loadAnimation("characters/player/_down idle.png", 0.15f, true);
+            upIdle = loadAnimation("characters/player/_up idle.png", 0.15f, true);
+            leftIdle = loadAnimation("characters/player/_side idle.png", 0.15f, true);
+            rightIdle = createFlippedAnimation(leftIdle);
+            
+            downWalk = loadAnimation("characters/player/_down walk.png", 0.1f, true);
+            upWalk = loadAnimation("characters/player/_up walk.png", 0.1f, true);
+            leftWalk = loadAnimation("characters/player/_side walk.png", 0.1f, true);
+            rightWalk = createFlippedAnimation(leftWalk);
+            
+            downAttack = loadAnimation("characters/player/_down attack.png", 0.1f, false);
+            upAttack = loadAnimation("characters/player/_up attack.png", 0.1f, false);
+            leftAttack = loadAnimation("characters/player/_side attack.png", 0.1f, false);
+            rightAttack = createFlippedAnimation(leftAttack);
+
+            pickUp = loadAnimation("characters/player/_pick up.png", 0.15f, false);
+            
+            System.out.println("✓ All animations loaded successfully!");
         } catch (Exception e) {
-            System.err.println("✗ FAILED to load texture!");
+            System.err.println("✗ FAILED to load animations!");
             e.printStackTrace();
             return;
         }
-
-        // Extract the first frame (top-left corner at position 0,0)
-        currentFrame = new TextureRegion(spriteSheet, 0, 0, FRAME_WIDTH, FRAME_HEIGHT);
-        System.out.println("✓ TextureRegion created: " + FRAME_WIDTH + "x" + FRAME_HEIGHT);
 
         // World position
         position = new Vector2(startX, startY);
@@ -81,11 +105,18 @@ public class Player {
     }
 
     /**
-     * Update logic - handle movement
+     * Update logic - handle movement and animation state
      */
     public void update(float delta) {
         handleInput(delta);
         updateCollisionBox();
+        stateTimer += delta;
+    }
+
+    private boolean isAnimationFinished() {
+        Animation<TextureRegion> currentAnim = getAnimation();
+        if (currentAnim == null) return true;
+        return currentAnim.isAnimationFinished(stateTimer);
     }
 
     /**
@@ -95,21 +126,49 @@ public class Player {
         float moveX = 0;
         float moveY = 0;
 
-        // Check WASD keys
-        if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            moveY += 1; // Move up
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            moveY -= 1; // Move down
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            moveX -= 1; // Move left
-        }
-        if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            moveX += 1; // Move right
+        if (Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            currentState = State.ATTACK;
+            stateTimer = 0f;
+        } else if (Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            currentState = State.PICK_UP;
+            stateTimer = 0f;
         }
 
-        // If no movement, return early
+        boolean canMove = (currentState != State.ATTACK && currentState != State.PICK_UP) 
+                          || isAnimationFinished();
+
+        if (canMove) {
+            if (currentState == State.ATTACK || currentState == State.PICK_UP) {
+                currentState = State.IDLE;
+            }
+
+            if (Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                moveY += 1;
+                currentDirection = Direction.UP;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                moveY -= 1;
+                currentDirection = Direction.DOWN;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                moveX -= 1;
+                currentDirection = Direction.LEFT;
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                moveX += 1;
+                currentDirection = Direction.RIGHT;
+            }
+
+            if (moveX != 0 || moveY != 0) {
+                if (currentState != State.WALK) stateTimer = 0f;
+                currentState = State.WALK;
+            } else {
+                if (currentState != State.IDLE) stateTimer = 0f;
+                currentState = State.IDLE;
+            }
+        }
+
+        // If no movement, return early (state might still have changed)
         if (moveX == 0 && moveY == 0) {
             return;
         }
@@ -156,18 +215,79 @@ public class Player {
         collisionBox.y = position.y + (height - COLLISION_HEIGHT) / 2;
     }
 
+    private Animation<TextureRegion> getAnimation() {
+        switch (currentState) {
+            case WALK:
+                if (currentDirection == Direction.UP) return upWalk;
+                if (currentDirection == Direction.DOWN) return downWalk;
+                if (currentDirection == Direction.LEFT) return leftWalk;
+                return rightWalk;
+            case ATTACK:
+                if (currentDirection == Direction.UP) return upAttack;
+                if (currentDirection == Direction.DOWN) return downAttack;
+                if (currentDirection == Direction.LEFT) return leftAttack;
+                return rightAttack;
+            case PICK_UP:
+                return pickUp;
+            case IDLE:
+            default:
+                if (currentDirection == Direction.UP) return upIdle;
+                if (currentDirection == Direction.DOWN) return downIdle;
+                if (currentDirection == Direction.LEFT) return leftIdle;
+                return rightIdle;
+        }
+    }
+
     /**
      * Render the player
      */
     public void render(SpriteBatch batch) {
-        batch.draw(currentFrame, position.x, position.y, width, height);
+        Animation<TextureRegion> anim = getAnimation();
+        if (anim != null) {
+            TextureRegion frame = anim.getKeyFrame(stateTimer);
+            batch.draw(frame, position.x, position.y, width, height);
+        }
+    }
+
+    private Animation<TextureRegion> loadAnimation(String path, float frameDuration, boolean loop) {
+        Texture sheet = new Texture(path);
+        textureList.add(sheet);
+
+        int cols = sheet.getWidth() / FRAME_WIDTH;
+        int rows = sheet.getHeight() / FRAME_HEIGHT;
+
+        TextureRegion[][] tmp = TextureRegion.split(sheet, FRAME_WIDTH, FRAME_HEIGHT);
+        Array<TextureRegion> frames = new Array<>(cols * rows);
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                frames.add(tmp[i][j]);
+            }
+        }
+
+        Animation<TextureRegion> anim = new Animation<>(frameDuration, frames, 
+            loop ? Animation.PlayMode.LOOP : Animation.PlayMode.NORMAL);
+        return anim;
+    }
+
+    private Animation<TextureRegion> createFlippedAnimation(Animation<TextureRegion> original) {
+        Object[] originalFrames = original.getKeyFrames();
+        Array<TextureRegion> flippedFrames = new Array<>(originalFrames.length);
+        for (int i = 0; i < originalFrames.length; i++) {
+            TextureRegion frame = new TextureRegion((TextureRegion) originalFrames[i]);
+            frame.flip(true, false);
+            flippedFrames.add(frame);
+        }
+        return new Animation<>(original.getFrameDuration(), flippedFrames, original.getPlayMode());
     }
 
     /**
      * Dispose resources
      */
     public void dispose() {
-        spriteSheet.dispose();
+        for (Texture texture : textureList) {
+            texture.dispose();
+        }
         System.out.println("Player disposed");
     }
 
